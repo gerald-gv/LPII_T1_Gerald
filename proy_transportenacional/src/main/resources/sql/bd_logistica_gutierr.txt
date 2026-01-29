@@ -1,0 +1,55 @@
+CREATE SCHEMA `bd_logistica_gutierrez` ;
+
+CREATE TABLE `bd_logistica_gutierrez`.`sucursal` (
+  `id_sucursal` INT NOT NULL AUTO_INCREMENT,
+  `nombre_ciudad` VARCHAR(45) NOT NULL,
+  `tipo_almacen` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_sucursal`));
+
+CREATE TABLE `bd_logistica_gutierrez`.`transporte` (
+  `id_transp` INT NOT NULL AUTO_INCREMENT,
+  `placa_vehiculo` VARCHAR(45) NOT NULL,
+  `id_sucursal` INT NOT NULL,
+  `capacidad_kg` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id_transp`),
+  INDEX `id_sucursal_idx` (`id_sucursal` ASC) VISIBLE,
+  CONSTRAINT `id_sucursal`
+    FOREIGN KEY (`id_sucursal`)
+    REFERENCES `bd_logistica_gutierrez`.`sucursal` (`id_sucursal`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+CREATE TABLE `bd_logistica_gutierrez`.`envio` (
+  `nro_guia` INT NOT NULL AUTO_INCREMENT,
+  `fecha_despacho` DATE NOT NULL DEFAULT (CURRENT_DATE),
+  `id_transp` INT NOT NULL,
+  `peso_paquete` DECIMAL(5,2) NOT NULL,
+  `destino_final` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`nro_guia`),
+  INDEX `id_transp_idx` (`id_transp` ASC) VISIBLE,
+  CONSTRAINT `id_transp`
+    FOREIGN KEY (`id_transp`)
+    REFERENCES `bd_logistica_gutierrez`.`transporte` (`id_transp`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
+INSERT INTO sucursal (nombre_ciudad, tipo_almacen) VALUES ('Lima', 'FRIOS');
+INSERT INTO sucursal (nombre_ciudad, tipo_almacen) VALUES ('Cusco', 'SECOS');
+INSERT INTO sucursal (nombre_ciudad, tipo_almacen) VALUES ('Arequipa', 'PELIGROSOS');
+
+INSERT INTO transporte (placa_vehiculo, id_sucursal, capacidad_kg) VALUES
+('ABC123', 1, 1500.00),
+('DEF456', 2, 2000.00),
+('GHI789', 3, 1200.00);
+
+INSERT INTO envio (id_transp, peso_paquete, destino_final) VALUES
+(1, 20.50, 'Trujillo'),
+(2, 35.75, 'Iquitos'),
+(3, 10.20, 'Piura');
+
+
+
+
